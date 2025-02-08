@@ -52,5 +52,4 @@ export {
     buildStyles,
     buildCursor,
     strProtoAdd,
-    styleMaker
 }

@@ -1,0 +1,10 @@
+node*
+*lock*
+.npm*
+dist
+
+__*
+\!*
+
+.history/
+.vscode/

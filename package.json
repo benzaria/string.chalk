@@ -1,0 +1,61 @@
+{
+  "name": "string.chalk",
+  "version": "0.0.1-stable",
+  "description": "",
+  "types": "./dist/types/index.d.ts",
+  "module": "./dist/esm/index.mjs",
+  "main": "./dist/cjs/index.cjs",
+  "type": "module",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "require": "./dist/cjs/index.cjs",
+    "import": "./dist/esm/index.mjs"
+  },
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "test:index": "tsx test",
+    "test": "mocha",
+    "jest": "jest",
+    "prepublishOnly": "rem tsx __clean",
+    "prebuild": "npm run type-check && npm run lint-check",
+    "build": "npm run build:skip-check",
+    "build:skip-check": "npm run build:cjs && npm run build:esm && npm run build:dts",
+    "build:dts": "tsup --out-dir ./dist/types --dts-only",
+    "build:cjs": "tsup --out-dir ./dist/cjs --format cjs",
+    "build:esm": "tsup --out-dir ./dist/esm --format esm",
+    "type-check": "tsc --noEmit",
+    "lint-check": "eslint ./src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benzaria/string.chalk.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [],
+  "author": "benzaria",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benzaria/string.chalk/issues"
+  },
+  "homepage": "https://github.com/benzaria/string.chalk#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/node": "^22.13.0",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
+    "mocha": "^11.1.0",
+    "tsup": "^8.3.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.22.0"
+  },
+  "optionalDependencies": {
+    "jiri": "^1.0.0"
+  },
+  "dependencies": {
+    "ansi-escapes": "^7.0.0",
+    "chalk": "^5.4.1"
+  }
+}

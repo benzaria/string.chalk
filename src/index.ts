@@ -1,11 +1,6 @@
-import { buildStyles, buildCursor } from './core'
-import { } from './utils/cursorHelper'
-import { styleMaker } from './utils/styleHelper'
-import { cursor } from './vendor/cursor'
-import { styles } from './vendor/style'
+import './style'
+import './cursor'
 
-import './types/cursor'
-import './types/style'
-
-buildStyles(styles)
-buildCursor(cursor)
+// if u need any components in the package just import it
+// export * from './style'
+// export * from './cursor'

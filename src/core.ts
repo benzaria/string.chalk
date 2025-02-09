@@ -1,55 +1,58 @@
-import { styleMaker } from "./utils/styleHelper"
-import { } from "./utils/cursorHelper";
+import { cursorMaker } from './utils/cursorHelper'
+import { styleMaker } from './utils/styleHelper'
 
-function buildStyles<T extends Styles>(styles: T) {
-    styles.Std.forEach(entry => strProtoAdd(entry, 'Std'))
-    styles.nonStd.forEach(entry => strProtoAdd(entry, 'nonStd'))
-}
+import './types/cursor.d'
+import './types/style.d'
 
-function buildCursor<T extends Cursor>(styles: T) {
-    styles.Std.forEach(entry => strProtoAdd(entry, 'Std'))
-    styles.nonStd.forEach(entry => strProtoAdd(entry, 'nonStd'))
-}
+export class stringChalk {
+    private $Proto = String.prototype
 
-function strProtoAdd<T>(entry: any, type: StyleKeys = 'Std') {
-    const obj: { [key: string | number | symbol]: ((...args: any) => any) | boolean } = {
-        enumerable: false,
-        configurable: true,
+    buildStyles(styles: Styles) {
+        styles.Std.forEach(entry => this.$ProtoAdd(entry, true, true))
+        styles.nonStd.forEach(entry => this.$ProtoAdd(entry, false, true))
+        return this
     }
 
-    let prop = entry[0]
-    if (type === 'Std') {
-        let [, open, close] = entry
-        obj.get = function (this: string) {
-            return styleMaker.call(this, open, close)
+    buildCursor(cursor: Cursor) {
+        cursor.Std.forEach(entry => this.$ProtoAdd(entry, true, false))
+        cursor.nonStd.forEach(entry => this.$ProtoAdd(entry, false, false))
+        return this
+    }
+
+    $ProtoAdd(entry: any, isStd: boolean = true, isStyle: boolean = true) {
+        const obj: { [key: string | number | symbol]: ((...args: any) => any) | boolean } = {
+            enumerable: false,
+            configurable: true,
         }
-    }
 
-    else {
-        obj.value = function (this: string, ...args: number[]) {
-            let open = entry[1]
-            if (typeof open === 'string') {
-                const openMath = open.match(/\{(id|[rgb])\}/ig)
-
-                if (!openMath) return this
-
-                openMath.forEach((match, index) => {
-                    if (args[index] !== undefined)
-                        open = open.replace(match, args[index].toString())
-
-                })
-                return styleMaker.call(this, open, 0)
+        let prop = entry[0]
+        if (isStd) {
+            let [, open, close = 0] = entry
+            obj.get = function (this: string) {
+                return isStyle ? styleMaker.call(this, open, close) : cursorMaker.call(this, open)
             }
-
-            return open.call(this, ...args)
         }
+
+        else {
+            obj.value = function (this: string, ...args: (number | string)[]) {
+                let open = entry[1]
+                if (typeof open === 'string') {
+                    const openMath = open.match(/\{(id|[rgbxyn])\}/ig)
+
+                    if (!openMath) return this.dblunderline
+
+                    openMath.forEach((match, index) => {
+                        if (args[index] !== undefined)
+                            open = open.replace(match, args[index].toString())
+
+                    })
+                    return isStyle ? styleMaker.call(this, open, 0) : cursorMaker.call(this, open)
+                }
+
+                return open.call(this, ...args)
+            }
+        }
+
+        Object.defineProperty(this.$Proto, prop, obj)
     }
-
-    Object.defineProperty(String.prototype, prop, obj)
-}
-
-export {
-    buildStyles,
-    buildCursor,
-    strProtoAdd,
 }

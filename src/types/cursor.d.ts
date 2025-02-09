@@ -17,7 +17,11 @@ type StringExtendStd = {
 }
 
 type StringExtendNonStd = {
-    [key in AnsiCursorNonStd]: string
+    [key in Exclude<AnsiCursorNonStd, 'xy' | 'xyRestore'>]: (n: number) => string
+} & {
+    xy(): Promise<{ x: number, y: number }>
+    xy(x: number, y: number): string
+    xyRestore(x: number, y: number): string
 }
 
 type StringExtend = StringExtendStd & StringExtendNonStd

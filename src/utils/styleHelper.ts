@@ -50,7 +50,7 @@ function colorFormat(color: Color) {
 }
 
 function styleMaker(this: string, ...[open, close]: Color) {
-    return `${CSI}${open}m${this}${CSI}${close}m`
+    return `${CSI}${open}m${this}${close !== undefined ? CSI + close + 'm' : ''}`
 }
 
 export { colorFormat, fg_bg, hex2rgb, styleMaker }

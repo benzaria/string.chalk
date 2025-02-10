@@ -23,5 +23,5 @@ export const _store = isTerminalApp ? `${ESC}7` : `${CSI}s`
 export const _restore = isTerminalApp ? `${ESC}8` : `${CSI}u`
 
 export const write =
-    isNode || isBun ? process.stdout.write.bind(process.stdout) : console.log.bind(console)
+    isDeno ? console.log.bind(console) : process.stdout.write.bind(process.stdout)
 // isDeno ? 

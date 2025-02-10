@@ -5,43 +5,65 @@ declare global {
 
     type Styles = typeof styles
     type StyleKeys = keyof Styles
+    // type StyleValues = Styles[StyleKeys]
     type RGB = number[]
     type HEX = string | string[] //? the other type here has no purpos else than keeping the TS server from infering the string type
     type ID = number | number[] //? the other type here has no purpos else than keeping the TS server from infering the number type
     type Color = (number | string)[]
+    type StringExtend = StringExtendGet & StringExtendApply
+    type StringExtendGet = { [key in AnsiStylesGet]: string }
+
+    type StringExtendApply = {
+        fgrgb(...color: RGB): string
+        bgrgb(...color: RGB): string
+        fghex(color: HEX): string
+        bghex(color: HEX): string
+        fg256(color: ID): string
+        bg256(color: ID): string
+
+        /**
+         * Set's the Foreground Colors
+         * @param {Color} color
+         * @return {string} The modified String
+         */
+        fg(...color: RGB): string
+        fg(color: HEX): string
+        fg(color: ID): string
+        /**
+         * Set's the Background Colors
+         * @param {Color} color
+         * @return {string} The modified String
+         */
+        bg(...color: RGB): string
+        bg(color: HEX): string
+        bg(color: ID): string
+
+        /**
+         * Set's the Foreground and Background Colors
+         * @param {fgbg[0]} fgColor
+         * @param {fgbg[1]} bgColors
+         * @return {string} The modified String
+         */
+        fgbg(...[fgColor, bgColor]: fgbg): string
+
+        /**
+         * Remove Styles from Strings
+         * @param {(AnsiStyles | AnsiStyles[])} style 
+         * @return {string} The modified String
+         */
+        un(style: AnsiStyles | AnsiStyles[], ...args: Color): string
+    }
+    type AnsiStylesGet = ExtractAnsiStyles<Styles['get']>
+    type AnsiStylesApply = ExtractAnsiStyles<Styles['apply']>
+    type AnsiStyles = AnsiStylesGet | AnsiStylesApply
 }
 
-type ExtractAnsiStyles<T extends ReadonlyArray<readonly [string, ...any[]]>> = T[number][0]
-
-type AnsiStylesStd = ExtractAnsiStyles<typeof styles.Std>
-// type AnsiStylesNonStd = ExtractAnsiStyles<typeof styles.nonStd>
-
-type StringExtendStd = {
-    [key in AnsiStylesStd]: string
-}
-
-type StringExtendNonStd = {
-    fgrgb: (...color: RGB) => string
-    bgrgb: (...color: RGB) => string
-    fghex: (color: HEX) => string
-    bghex: (color: HEX) => string
-    fg256: (color: ID) => string
-    bg256: (color: ID) => string
-
-    fg(...color: RGB): string
-    bg(...color: RGB): string
-    fg(color: HEX): string
-    bg(color: HEX): string
-    fg(color: ID): string
-    bg(color: ID): string
-
-    fgbg(...colors: fgbg): string
-}
+type ExtractAnsiStyles<T extends Styles[StyleKeys]> = keyof T
 
 type ColorObj = {
-    'RGB': RGB
-    'HEX': HEX
-    'ID': ID
+    RGB: RGB
+    HEX: HEX
+    ID: ID
 }
 
 type ColorComb = {
@@ -51,5 +73,3 @@ type ColorComb = {
 }
 
 type fgbg = Parameters<ColorComb[keyof ColorComb][keyof ColorComb]>
-
-type StringExtend = StringExtendStd & StringExtendNonStd

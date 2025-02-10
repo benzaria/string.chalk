@@ -1,6 +1,6 @@
 {
   "name": "string.chalk",
-  "version": "0.0.2-beta",
+  "version": "1.0.0-beta",
   "description": "",
   "types": "./dist/types/index.d.ts",
   "module": "./dist/esm/index.mjs",

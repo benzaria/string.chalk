@@ -1,6 +1,6 @@
-import { CSI } from "./globals"
+import { CSI } from "./global"
 
-function hex2rgb(hex: HEX) {
+function hex2rgb(hex: HEX): RGB {
 
     const matches = /[a-f\d]{6}|[a-f\d]{3}/i.exec(hex as string)
     if (!matches) return [0, 0, 0]
@@ -13,11 +13,9 @@ function hex2rgb(hex: HEX) {
     const integer = Number.parseInt(colorString, 16)
 
     return [
-        /* eslint-disable no-bitwise */
-        (integer >> 16) & 0xFF,
-        (integer >> 8) & 0xFF,
+        integer >> 16 & 0xFF,
+        integer >> 8 & 0xFF,
         integer & 0xFF,
-        /* eslint-enable no-bitwise */
     ]
 
 }
@@ -43,14 +41,19 @@ function colorFormat(color: Color) {
         return 'HEX'
     if (color.length === 3 && color.every(c => typeof c === 'number'))
         return 'RGB'
-    if (typeof color[0] === 'number' && color.length === 1)
+    if (color.length === 1 && typeof color[0] === 'number')
         return 'ID'
     return undefined
 
 }
 
 function styleMaker(this: string, ...[open, close]: Color) {
-    return `${CSI}${open}m${this}${close !== undefined ? CSI + close + 'm' : ''}`
+    return `${CSI}${open}m${this}${CSI}${close}m`
 }
 
-export { colorFormat, fg_bg, hex2rgb, styleMaker }
+export {
+    fg_bg,
+    hex2rgb,
+    styleMaker,
+    colorFormat,
+}

@@ -1,6 +1,6 @@
-import { _store, _restore, CSI, CR, LF, HT, BS, VT, FF, DEL, OSC, ESC, DCS, BEL } from '../utils/globals'
-import { _xy, addResizeListener } from '../utils/cursorHelper'
-import { log } from 'console'
+import { _store, _restore, CSI, CR, LF, HT, BS, VT, FF, DEL, ESC, BEL } from '../utils/global'
+import { __linker, __xy } from '../utils/cursor'
+import { isWindows } from 'environment'
 
 export const cursor = {
     get: {
@@ -12,6 +12,8 @@ export const cursor = {
         hide: ['?25l'],
         storeScreen: ['?47h'],
         restoreScreen: ['?47l'],
+        enableAlternativeScreen: ['?1049h'],
+        disableAlternativeScreen: ['?1049l'],
         eraseLine: ['2K'],
         eraseLineEnd: ['K'],
         eraseLineStart: ['1K'],
@@ -19,25 +21,23 @@ export const cursor = {
         eraseScreenEnd: ['J'],
         eraseScreenStart: ['1J'],
         eraseSavedLines: ['3J'],
-        new: [function (this: string) { return LF + this }],
-        start: [function (this: string) { return CR + this }],
+        clearScreen: [null, `${ESC}c`],
+        clearTerminal: ['2J' + (isWindows ? `${CSI}0f` : `${CSI}3J${CSI}H`)],
         end: [function (this: string) { return this.x(terinalSize.columns - this.length) }],
-        top: [function (this: string) { return this.y(0) }],
         bottom: [function (this: string) { return this.y(terinalSize.rows) }],
-        Vtab: [function (this: string) { return VT + this }],
-        Htab: [function (this: string) { return HT + this }],
-        ESC: [function (this: string) { return ESC + this }],
-        CSI: [function (this: string) { return CSI + this }],
-        OSC: [function (this: string) { return OSC + this }],
-        DCS: [function (this: string) { return DCS + this }],
-        BEL: [function (this: string) { return BEL + this }],
-        DEL: [function (this: string) { return DEL + this }],
-        FF: [function (this: string) { return FF + this }],
+        top: [function (this: string) { return this.y(0) }],
+        beep: [null, BEL],
+        new: [null, LF],
+        start: [null, CR],
+        Vtab: [null, VT],
+        Htab: [null, HT],
+        DEL: [null, DEL],
+        FF: [null, FF],
 
     },
 
     apply: {
-        xy: [_xy],
+        xy: [__xy],
         x: ['{n}G'],
         up: ['{n}A'],
         dn: ['{n}B'],
@@ -49,6 +49,10 @@ export const cursor = {
         upStart: ['{n}F'],
         dnStart: ['{n}E'],
         downStart: ['{n}E'],
+        setScreenMode: ['={n}h'],
+        unSetScreenMode: ['={n}l'],
+        link: [__linker],
+        _link: [__linker],
 
         key: [function (this: string, c: number, s?: number | string) { return (c ? (s ? `${CSI}${c};${s}p` : `${CSI}${c}p`) : (s ? `${CSI}${s}p` : '')) + this }],
         y: [async function (this: string, n: number) { return this.xy((await this.xy()).x, n) }],

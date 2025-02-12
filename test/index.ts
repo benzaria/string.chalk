@@ -1,24 +1,22 @@
-import { log as echo } from 'console'
-import { stdout } from 'process';
-import ansi from "ansi-escapes";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 
-import { cursor } from '../src/vendor/cursor'
-import { styles } from '../src/vendor/style'
-import { stringChalk } from '../src/core'
-import { addResizeListener } from '../src/utils/cursorHelper'
-import { write } from '../src/utils/globals'
+import { stringChalk } from '../src'
 
-import '../src'
+new stringChalk()
+    .buildStyles()
+    .buildCursor()
 
-addResizeListener()
-
-// new stringChalk()
-//     .buildStyles(styles)
-//     .buildCursor(cursor)
+const obj = {
+    get: {
+        dd: [1, 22]
+    },
+}
 
 console.clear()
-// write(''.store + 'sheesh'.xy(9, 0) + ''.restore)
-// echo(await 'sheesh'.xy())
+// write(''.store + 'foo'.xy(9, 0) + ''.restore)
+// echo('foo'.xyRestore(9, 2))
+// echo(await 'foo'.xy())
 // echo('*********')
 // echo('---------')
 // echo('---------')
@@ -29,8 +27,11 @@ console.clear()
 // echo('up'.red.up(2))
 // echo('---------'.green)
 
-const str = 'Hello'._bold.italic.fg(45)
-echo(str)
+const str = 'benzaria/string.chalk'._bold.italic.fg(45)
+echo(str.resetAll.bg('#455'))
+echo(str._link('https://github.com/benzaria/string.chalk'))
+echo(str.resetAll)
 echo(str.un(['bold', 'italic']))
+
 
 setTimeout(() => { }, 5e3)

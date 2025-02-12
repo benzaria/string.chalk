@@ -1,30 +1,36 @@
 {
-  "name": "string.chalk",
-  "version": "1.0.0-beta",
+  "name": "@benzn/chalk",
+  "version": "1.0.0",
   "description": "",
-  "types": "./dist/types/index.d.ts",
-  "module": "./dist/esm/index.mjs",
-  "main": "./dist/cjs/index.cjs",
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "types": "./dist/types/index.d.ts",
-    "require": "./dist/cjs/index.cjs",
-    "import": "./dist/esm/index.mjs"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style": {
+      "types": "./dist/style.d.ts",
+      "import": "./dist/style.js"
+    },
+    "./cursor": {
+      "types": "./dist/cursor.d.ts",
+      "import": "./dist/cursor.js"
+    }
   },
   "scripts": {
     "start": "tsx src/index.ts",
     "test": "tsx test",
     "mocha": "mocha",
     "jest": "jest",
-    "prepublishOnly": "rem tsx __clean",
+    "prepublishOnly": "rem tsx _clean",
     "prebuild": "npm run type-check && npm run lint-check",
     "build": "npm run build:skip-check",
-    "build:skip-check": "npm run build:cjs && npm run build:esm && npm run build:dts",
-    "build:dts": "tsup --out-dir ./dist/types --dts-only",
-    "build:cjs": "tsup --out-dir ./dist/cjs --format cjs",
-    "build:esm": "tsup --out-dir ./dist/esm --format esm",
+    "build:skip-check": "tsc",
     "type-check": "tsc --noEmit",
-    "lint-check": "eslint ./src/"
+    "lint-check": "eslint ./src"
   },
   "repository": {
     "type": "git",
@@ -40,24 +46,22 @@
     "url": "https://github.com/benzaria/string.chalk/issues"
   },
   "homepage": "https://github.com/benzaria/string.chalk#readme",
+  "dependencies": {
+    "environment": "^1.1.0"
+  },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@types/node": "^22.13.1",
-    "eslint": "^9.20.0",
+    "eslint": "^9.20.1",
     "globals": "^15.14.0",
     "mocha": "^11.1.0",
     "tsup": "^8.3.6",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.23.0"
+    "typescript-eslint": "^8.24.0"
   },
-  "optionalDependencies": {
-    "jiri": "^1.0.0"
-  },
-  "dependencies": {
+  "testingDependencies": {
     "ansi-escapes": "^7.0.0",
-    "chalk": "^5.4.1",
-    "environment": "^1.1.0",
-    "import-lazy": "^4.0.0"
+    "chalk": "^5.4.1"
   }
 }

@@ -1,9 +1,15 @@
-import { CSI } from "../utils/globals"
-import { fg_bg, hex2rgb } from "../utils/styleHelper"
+import { fg_bg, hex2rgb } from '../utils/style'
+import { ansiReg } from '../utils/global'
 
-export const styles = {
+export const style = {
     get: {
         reset: [0, 0],
+        resetAll: [function (this: string) { return this.replace(ansiReg, '') }],
+        resetColor: [],
+        resetFg: [],
+        resetBg: [],
+
+
         bold: [1, 22],
         _bold: [1, 22],
         dim: [2, 22],
@@ -68,7 +74,7 @@ export const styles = {
         bghex: [function (this: string, hex: HEX) { return this.bgrgb(...(hex2rgb(hex))) }],
         fg: [function (this: string, ...color: Color) { return fg_bg.call(this, 'fg', color) }],
         bg: [function (this: string, ...color: Color) { return fg_bg.call(this, 'bg', color) }],
-        fgbg: [function (this: string, ...colors: any[]) { return this.fg(colors[0]).bg(colors[1]) }],
+        fgbg: [function (this: string, ...[fg, bg]: any) { return this.fg(fg).bg(bg) }],
 
     },
 } as const

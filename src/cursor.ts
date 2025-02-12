@@ -1,13 +1,19 @@
-import { cursor } from './vendor/cursor'
-import { stringChalk } from './core'
-import { addResizeListener } from './utils/cursorHelper'
+import { stringChalk as _ } from './core'
+
+type map = Omit<InstanceType<typeof _>, "buildStyles">
+
+type stringChalk = {
+    [key in keyof map]: (...args: Parameters<map[key]>) => stringChalk
+} & {
+    new(options?: stringChalkOptions): stringChalk
+}
+
+const stringChalk: stringChalk = _ as any;
 
 new stringChalk()
-    .buildCursor(cursor)
-
-addResizeListener()
+    .buildCursor()
 
 // if u need any components in the package just import it
-// export * from './core'
-// export * from './vendor/cursor'
-// export * from './utils/cursorHelper'
+export { stringChalk }
+export * from './utils/cursor'
+export * from './vendor/cursor'

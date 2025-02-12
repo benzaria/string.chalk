@@ -1,6 +1,12 @@
-import './style'
-import './cursor'
+import { stringChalk } from './core'
 
-// if u need any components in the package just import it
-export * from './style'
-export * from './cursor'
+new stringChalk()
+    .buildStyles()
+    .buildCursor()
+
+//? if u need any components in the package just import it
+export * from './core'
+export * from './utils/style'
+export * from './utils/cursor'
+export * from './vendor/style'
+export * from './vendor/cursor'

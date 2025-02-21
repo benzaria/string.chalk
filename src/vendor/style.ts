@@ -1,13 +1,13 @@
-import { fg_bg, hex2rgb } from '../utils/style'
+import { fg_bg, hex2rgb, __un } from '../utils/style'
 import { ansiReg } from '../utils/global'
 
 export const style = {
     get: {
-        reset: [0, 0],
-        resetAll: [function (this: string) { return this.replace(ansiReg, '') }],
-        resetColor: [],
-        resetFg: [],
-        resetBg: [],
+        reset: [0],
+        strip: [function (this: string) { return this.replace(ansiReg, '') }],
+        stripColor: [],
+        stripFg: [],
+        stripBg: [],
 
 
         bold: [1, 22],
@@ -66,6 +66,7 @@ export const style = {
     },
 
     apply: {
+        un: [__un],
         fg256: ['38;5;{n}'],
         bg256: ['48;5;{n}'],
         fgrgb: ['38;2;{r};{g};{b}'],

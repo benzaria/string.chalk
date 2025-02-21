@@ -22,7 +22,7 @@ export const
 const _store = isTerminalApp ? `${ESC}7` : `${CSI}s`
 const _restore = isTerminalApp ? `${ESC}8` : `${CSI}u`
 
-const __write = /*isDeno ? echo 0:*/ process.stdout.write.bind(process.stdout)
+const __write = /*isDeno ? echo*/ process.stdout.write.bind(process.stdout)
 
 const __echo: {
     (...data: any[]): void
@@ -39,13 +39,17 @@ function addEcho_Write(): void {
 }
 
 const ansiReg = new RegExp(
-    `[\\x1b\\x9b][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*` +
-    `|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?(?:\\x07|\\x1b\\x5c|\\x9c))` +
+    '[\\x1b\\x9b][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*' +
+    '|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?(?:\\x07|\\x1b\\x5c|\\x9c))' +
     '|(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))', 'g')
+const linkReg = /\x1b]8;;(.+)\x07(?:.+)\x1b]8;;\x07/
+const posReg = /\x1b\[(\d+);(\d+)R/
 
 export {
     _store,
+    posReg,
     ansiReg,
+    linkReg,
     _restore,
     addEcho_Write,
     isTerminalApp,

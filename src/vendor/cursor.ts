@@ -1,5 +1,5 @@
 import { _store, _restore, CSI, CR, LF, HT, BS, VT, FF, DEL, ESC, BEL } from '../utils/global'
-import { __linker, __xy } from '../utils/cursor'
+import { __linker, __xy, __move } from '../utils/cursor'
 import { isWindows } from 'environment'
 
 export const cursor = {
@@ -8,12 +8,12 @@ export const cursor = {
         upScroll: ['M'],
         store: [_store],
         restore: [_restore],
-        show: ['?25h'],
-        hide: ['?25l'],
+        showCursor: ['?25h'],
+        hideCursor: ['?25l'],
         storeScreen: ['?47h'],
         restoreScreen: ['?47l'],
-        enableAlternativeScreen: ['?1049h'],
-        disableAlternativeScreen: ['?1049l'],
+        enableAlternativeBuffer: ['?1049h'],
+        disableAlternativeBuffer: ['?1049l'],
         eraseLine: ['2K'],
         eraseLineEnd: ['K'],
         eraseLineStart: ['1K'],
@@ -23,7 +23,8 @@ export const cursor = {
         eraseSavedLines: ['3J'],
         clearScreen: [null, `${ESC}c`],
         clearTerminal: ['2J' + (isWindows ? `${CSI}0f` : `${CSI}3J${CSI}H`)],
-        end: [function (this: string) { return this.x(terinalSize.columns - this.length) }],
+        //end: [function (this: string) { return this.x(terinalSize.columns - this.length) }],
+        end: [function (this: string) { return this.lt(this.strip.length - 1).rt(100_000) }],
         bottom: [function (this: string) { return this.y(terinalSize.rows) }],
         top: [function (this: string) { return this.y(0) }],
         beep: [null, BEL],
@@ -38,6 +39,7 @@ export const cursor = {
 
     apply: {
         xy: [__xy],
+        move: [__move],
         x: ['{n}G'],
         up: ['{n}A'],
         dn: ['{n}B'],
@@ -63,7 +65,7 @@ export const cursor = {
         rtRestore: [function (this: string, n: number) { return _store + this.rt(n) + _restore }],
         ltRestore: [function (this: string, n: number) { return _store + this.lt(n) + _restore }],
         upStartRestore: [function (this: string, n: number) { return _store + this.upStart(n) + _restore }],
-        dnStartRestore: [function (this: string, n: number) { return _store + this.dnStart(n) + _restore }],
+        dnStartRestore: [function (this: string, n: number) { return _store + this.dnStart(n) + _restore }], 
 
     },
 } as const

@@ -1,4 +1,4 @@
-import { _restore, _store, BEL, CSI, OSC } from './global'
+import { _restore, _store, BEL, CSI, OSC, linkReg, posReg } from './global'
 import { isDeno } from 'environment'
 
 //@ts-expect-error Deno namespace is undefined
@@ -18,7 +18,7 @@ const getPos = () => new Promise<{ x: number, y: number }>(res => {
     stdout.write(`${CSI}6n`)
 
     stdin.once('data', (data: string) => {
-        const match = /\x1b\[(\d+);(\d+)R/.exec(data)
+        const match = data.match(posReg)
         stdin.setRawMode(false)
         stdin.pause()
 
@@ -31,7 +31,8 @@ function cursorMaker(this: string, open: string | number) {
     return `${CSI}${open}${this}`
 }
 
-function __linker(this: string, link: string) {
+function __linker(this: string, link?: string) {
+    if (link === undefined) return this.match(linkReg)[1] ?? ''
     return `${OSC}8;;${link}${BEL}${this}${OSC}8;;${BEL}`
 }
 
@@ -68,8 +69,18 @@ function addResizeListener() {
     // }
 }
 
+function __move(this: string, x: number, y: number) { 
+    let that = this
+    if (x > 0) that = that.rt(x)
+    if (x < 0) that = that.lt(x)
+    if (y > 0) that = that.dn(x)
+    if (y < 0) that = that.up(x)
+    return that
+}
+
 export {
     __xy,
+    __move,
     getPos,
     __linker,
     cursorMaker,

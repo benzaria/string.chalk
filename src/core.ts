@@ -1,6 +1,6 @@
 import { addResizeListener, cursorMaker } from './utils/cursor'
 import { CSI, addEcho_Write } from './utils/global'
-import { styleMaker } from './utils/style'
+import { styleMaker, __un } from './utils/style'
 import { cursor } from './vendor/cursor'
 import { style } from './vendor/style'
 
@@ -43,23 +43,7 @@ export class stringChalk {
      */
     buildStyles<T extends stringChalkExtend>(styles: T = (style as any)) {
         //? it need to be here insted of the vendor/style in case u want to use a custom styles obj.
-        this.$ProtoAdd(['un', function (this: string, style: string | string[], ..._args: any[]) {
-            // eslint-disable-next-line @typescript-eslint/no-this-alias
-            let __style = Array.isArray(style) ? style : [style], that = this
-
-            return __style.forEach(s => {
-                if (!styles.get || !styles.apply) return
-                let _style = styles.get[s][0] || styles.apply[s][0]
-                //TODO: make `un()` available for apply function also.
-                const _type = typeof _style
-
-                if (_type === 'string')
-                    that = that.replaceAll(`${CSI}${_style}m`, '')
-                else if (_type === 'function')
-                    throw new Error('`un()` is not available for apply function yet')
-
-            }), that
-        }], false)
+        //this.$ProtoAdd(['un', __un], false)
 
         return this.__builder(styles)
     }
@@ -88,8 +72,8 @@ export class stringChalk {
 
         let prop = entry[0]
         if (isGet) {
-            let [, open, close] = entry
             obj.get = function (this: string) {
+                let [, open, close] = entry
                 if (open === null) return close + this
                 if (typeof open === 'function')
                     return open.call(this)

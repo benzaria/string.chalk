@@ -28,10 +28,18 @@ console.clear()
 // echo('---------'.green)
 
 const str = 'benzaria/string.chalk'._bold.italic.fg(45)
-echo(str.resetAll.bg('#455'))
-echo(str._link('https://github.com/benzaria/string.chalk'))
-echo(str.resetAll)
+echo(str.un().bg('#45f'))
+echo(str.un().bg('#45f'))
+echo(str.link('https://github.com/benzaria/string.chalk').strip)
+echo('thisString'.end)
+echo(str.end)
 echo(str.un(['bold', 'italic']))
+echo(str.toString())
+echo(str.valueOf())
 
+let tt = "link".link('https://github.com/benzaria/string.chalk')
 
-setTimeout(() => { }, 5e3)
+echo(tt)
+echo(tt.un().link("https://google.com"))
+
+//setTimeout(() => { }, 5e3)

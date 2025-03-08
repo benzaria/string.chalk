@@ -1,8 +1,8 @@
-import { _restore, _store, BEL, CSI, OSC, linkReg, posReg } from './global'
+import { _restore, _store, BEL, CSI, OSC, linkReg, posReg, stdin, stdout } from './global'
 import { isDeno } from 'environment'
 
-//@ts-expect-error Deno namespace is undefined
-const { stdin, stdout } = isDeno ? Deno : process
+
+//const { stdin, stdout } = isDeno ? Deno : process
 
 function __xy(this: string, x?: number, y?: number) {
     if (x !== undefined && y !== undefined)
@@ -32,7 +32,7 @@ function cursorMaker(this: string, open: string | number) {
 }
 
 function __linker(this: string, link?: string) {
-    if (link === undefined) return this.match(linkReg)[1] ?? ''
+    if (link === undefined) return this.match(linkReg)?.[1] ?? ''
     return `${OSC}8;;${link}${BEL}${this}${OSC}8;;${BEL}`
 }
 
@@ -47,6 +47,8 @@ function addPositionListener() {
 }
 
 function addResizeListener() {
+
+    if (isDeno) return
 
     // if (isDeno) {
     //     //? well this is the best u can do with Deno
@@ -69,7 +71,7 @@ function addResizeListener() {
     // }
 }
 
-function __move(this: string, x: number, y: number) { 
+function __move(this: string, x: number, y: number) {
     let that = this
     if (x > 0) that = that.rt(x)
     if (x < 0) that = that.lt(x)
@@ -78,13 +80,33 @@ function __move(this: string, x: number, y: number) {
     return that
 }
 
+function __toggle(this: string, stat?: 'show' | 'hide') {
+    let _stat: typeof stat, stats = { show: '?25h', hide: '?25l' }
+
+    if (stat && Object.keys(stats).includes(stat))
+        _stat = stat.toLowerCase() as typeof stat
+    else
+        _stat = global.cursorStat === 'show' ? 'hide' : 'show'
+
+    global.cursorStat = _stat
+    return cursorMaker.call(this, stats[_stat]) //this[`${_stat}Cursor`]
+}
+
+function __shape(this: string, stat: 'bar' | 'block' | 'underline' | 'user' = 'user', blink: boolean = true) {
+    let stats = { user: 0, block: 1, underline: 3, bar: 5 }
+    const shape = stats[stat.toLowerCase() as typeof stat]
+    return cursorMaker.call(this, `${shape + ((blink && shape > 0) ? 1 : 0)} q`)
+}
+
 export {
     __xy,
     __move,
     getPos,
+    __shape,
     __linker,
-    cursorMaker,
+    __toggle,
     __restorer,
+    cursorMaker,
     addResizeListener,
     addPositionListener,
 }

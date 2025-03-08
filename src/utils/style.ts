@@ -1,4 +1,3 @@
-import { style } from "../vendor/style"
 import { CSI } from "./global"
 
 function hex2rgb(hex: HEX): RGB {
@@ -50,26 +49,7 @@ function styleMaker(this: string, ...[open, close]: Color) {
     return `${CSI}${open}m${this}${CSI}${close}m`
 }
 
-function __un(this: string, styles?: string | string[], ..._args: any[]) {
-    if (!styles) return this.strip
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let __styles = Array.isArray(styles) ? styles : [styles], that = this
-
-    return __styles.forEach(s => {
-        if (!style.get || !style.apply) return this
-        let _style = style.get[s][0] || style.apply[s][0]
-        //TODO: make `un()` available for apply function also.
-        const _type = typeof _style
-
-        if (_type === 'string')
-            that = that.replaceAll(`${CSI}${_style}m`, '')
-        else if (_type === 'function')
-            throw new Error('`un()` is not available for apply function yet')
-    }), that
-}
-
 export {
-    __un,
     fg_bg,
     hex2rgb,
     styleMaker,

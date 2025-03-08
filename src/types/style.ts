@@ -1,3 +1,4 @@
+import { __un } from '../utils/global'
 import { style } from '../vendor/style'
 
 declare global {
@@ -59,7 +60,7 @@ type StringExtendApply = {
      * @param {(AnsiStyles | AnsiStyles[])} style 
      * @return {string} The modified String
      */
-    un(style: AnsiStyles | AnsiStyles[], ...args: Color): string
+    un(...args: Parameters<typeof __un>): string
 }
 
 type ColorObj = {

@@ -1,17 +1,19 @@
 import { _store, _restore, CSI, CR, LF, HT, BS, VT, FF, DEL, ESC, BEL } from '../utils/global'
-import { __linker, __xy, __move } from '../utils/cursor'
+import { __linker, __xy, __move, __toggle, __shape } from '../utils/cursor'
 import { isWindows } from 'environment'
 
 export const cursor = {
     get: {
         home: ['H'],
-        upScroll: ['M'],
+        backLine: ['M'],
         store: [_store],
         restore: [_restore],
-        showCursor: ['?25h'],
-        hideCursor: ['?25l'],
-        storeScreen: ['?47h'],
-        restoreScreen: ['?47l'],
+        showCursor: [function (this: string) { return this.toggleCursor('show') }],
+        hideCursor: [function (this: string) { return this.toggleCursor('hide') }],
+        blinkCursor: ['?12h'],
+        blockCorsor: ['?12l'],
+        storeBuffer: ['?47h'],
+        restoreBuffer: ['?47l'],
         enableAlternativeBuffer: ['?1049h'],
         disableAlternativeBuffer: ['?1049l'],
         eraseLine: ['2K'],
@@ -41,6 +43,7 @@ export const cursor = {
         xy: [__xy],
         move: [__move],
         x: ['{n}G'],
+        y: ['{n}d'],
         up: ['{n}A'],
         dn: ['{n}B'],
         down: ['{n}B'],
@@ -48,6 +51,9 @@ export const cursor = {
         right: ['{n}C'],
         lt: ['{n}D'],
         left: ['{n}D'],
+        upScroll: ['{n}S'],
+        dnScroll: ['{n}T'],
+        downScroll: ['{n}T'],
         upStart: ['{n}F'],
         dnStart: ['{n}E'],
         downStart: ['{n}E'],
@@ -55,9 +61,10 @@ export const cursor = {
         unSetScreenMode: ['={n}l'],
         link: [__linker],
         _link: [__linker],
+        toggleCursor: [__toggle],
+        shapeCursor: [__shape],
 
         key: [function (this: string, c: number, s?: number | string) { return (c ? (s ? `${CSI}${c};${s}p` : `${CSI}${c}p`) : (s ? `${CSI}${s}p` : '')) + this }],
-        y: [async function (this: string, n: number) { return this.xy((await this.xy()).x, n) }],
         xyRestore: [function (this: string, x: number, y: number) { return _store + this.xy(x, y) + _restore }],
         delete: [function (this: string, n?: number) { return `${BS} ${BS}`.repeat(n ?? this.length) + this }],
         upRestore: [function (this: string, n: number) { return _store + this.up(n) + _restore }],
@@ -65,7 +72,7 @@ export const cursor = {
         rtRestore: [function (this: string, n: number) { return _store + this.rt(n) + _restore }],
         ltRestore: [function (this: string, n: number) { return _store + this.lt(n) + _restore }],
         upStartRestore: [function (this: string, n: number) { return _store + this.upStart(n) + _restore }],
-        dnStartRestore: [function (this: string, n: number) { return _store + this.dnStart(n) + _restore }], 
+        dnStartRestore: [function (this: string, n: number) { return _store + this.dnStart(n) + _restore }],
 
     },
 } as const

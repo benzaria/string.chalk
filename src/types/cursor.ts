@@ -1,3 +1,4 @@
+import { __linker, __shape, __toggle } from '../cursor'
 import { cursor } from '../vendor/cursor'
 
 declare global {
@@ -24,12 +25,14 @@ type StringExtendGet = {
     bottom: Promise<string>
 }
 type StringExtendApply = {
-    [key in Exclude<AnsiCursorApply, 'xy' | 'xyRestore' | 'y' | 'link' | '_link'>]: (n?: number) => string
+    [key in Exclude<AnsiCursorApply, 'xy' | 'xyRestore' | 'y' | 'link' | '_link' | 'toggleCursor' | 'shapeCursor'>]: (n?: number) => string
 } & {
     y(n: number): Promise<string>
     xy(): Promise<{ x: number, y: number }>
     xy(x: number, y: number): string
     xyRestore(x: number, y: number): string
-    link(link: string): string
-    _link(link: string): string
+    link(...args: Parameters<typeof __linker>): string
+    _link(...args: Parameters<typeof __linker>): string
+    toggleCursor(...args: Parameters<typeof __toggle>): string
+    shapeCursor(...args: Parameters<typeof __shape>): string
 }

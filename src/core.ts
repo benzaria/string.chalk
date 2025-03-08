@@ -1,6 +1,6 @@
 import { addResizeListener, cursorMaker } from './utils/cursor'
-import { CSI, addEcho_Write } from './utils/global'
-import { styleMaker, __un } from './utils/style'
+import { addEcho_Write } from './utils/global'
+import { styleMaker } from './utils/style'
 import { cursor } from './vendor/cursor'
 import { style } from './vendor/style'
 

@@ -1,5 +1,5 @@
-import { fg_bg, hex2rgb, __un } from '../utils/style'
-import { ansiReg } from '../utils/global'
+import { ansiReg, __un } from '../utils/global'
+import { fg_bg, hex2rgb} from '../utils/style'
 
 export const style = {
     get: {

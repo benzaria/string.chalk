@@ -10,8 +10,11 @@ declare global {
             readonly [key: string]: readonly (null | string | number | ((...args: any[]) => any))[]
         }
     }
+
     var echo: typeof __echo
     var write: typeof __write
+    var cursorStat: 'hide' | 'show'
+
     type stringChalkOptions = {
         proto?: object,
         Echo_Write?: boolean,

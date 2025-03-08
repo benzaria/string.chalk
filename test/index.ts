@@ -13,7 +13,6 @@ const obj = {
     },
 }
 
-console.clear()
 // write(''.store + 'foo'.xy(9, 0) + ''.restore)
 // echo('foo'.xyRestore(9, 2))
 // echo(await 'foo'.xy())
@@ -27,19 +26,30 @@ console.clear()
 // echo('up'.red.up(2))
 // echo('---------'.green)
 
+echo('e'.enableAlternativeBuffer)
+console.clear()
 const str = 'benzaria/string.chalk'._bold.italic.fg(45)
 echo(str.un().bg('#45f'))
 echo(str.un().bg('#45f'))
-echo(str.link('https://github.com/benzaria/string.chalk').strip)
+echo(str._link('https://github.com/benzaria/string.chalk').strip)
 echo('thisString'.end)
 echo(str.end)
 echo(str.un(['bold', 'italic']))
 echo(str.toString())
 echo(str.valueOf())
 
-let tt = "link".link('https://github.com/benzaria/string.chalk')
+let tt = "link"._link('https://github.com/benzaria/string.chalk')
 
-echo(tt)
-echo(tt.un().link("https://google.com"))
+echo(tt._link())
+echo(tt.un()._link("https://google.com"))
 
-//setTimeout(() => { }, 5e3)
+echo('string'.shapeCursor('block'))
+
+/*
+setTimeout(()=> echo('str'.toggleCursor()), 2e3)
+setTimeout(()=> echo('str'.toggleCursor('hide')), 2e3*2)
+setTimeout(()=> echo('str'.toggleCursor()), 2e3*3)
+setTimeout(()=> echo('str'.toggleCursor()), 2e3*4)
+*/
+setTimeout(() => { echo('d'.disableAlternativeBuffer) }, 3e3)
+

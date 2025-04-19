@@ -20,14 +20,10 @@ type ExtractAnsiCursor<T extends Cursor[CursorKeys]> = keyof T
 type StringExtend = StringExtendGet & StringExtendApply
 type StringExtendGet = {
     [key in AnsiCursorGet]: string
-} & {
-    top: Promise<string>
-    bottom: Promise<string>
 }
 type StringExtendApply = {
-    [key in Exclude<AnsiCursorApply, 'xy' | 'xyRestore' | 'y' | 'link' | '_link' | 'toggleCursor' | 'shapeCursor'>]: (n?: number) => string
+    [key in Exclude<AnsiCursorApply, 'xy' | 'xyRestore' | 'link' | '_link' | 'toggleCursor' | 'shapeCursor'>]: (n?: number) => string
 } & {
-    y(n: number): Promise<string>
     xy(): Promise<{ x: number, y: number }>
     xy(x: number, y: number): string
     xyRestore(x: number, y: number): string

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 
-import { stringChalk } from '../src'
+import { stringChalk } from '../dist'
 
 new stringChalk()
     .buildStyles()
